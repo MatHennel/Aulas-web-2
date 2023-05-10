@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 Use \App\Models\Veterinario;
 
+Use \App\Models\Especialidade;
+
 
 
 
@@ -34,6 +36,8 @@ class VeterinarioController extends Controller
     public function index()
     {
         $veterinarios = Veterinario::all();
+        
+
         return view('veterinarios.index', compact(['veterinarios']));
     }
 
@@ -44,7 +48,11 @@ class VeterinarioController extends Controller
      */
     public function create()
     {
-        return view('veterinarios.create');
+
+        $dados = Especialidade::all();
+
+
+        return view('veterinarios.create',compact(['dados']));
     }
 
     /**
@@ -55,17 +63,9 @@ class VeterinarioController extends Controller
      */
     public function store(Request $request)
     {
-        $aux = session('veterinarios');
+        // echo $request->es;
 
-
-        $novo = [
-            "crmv" => $request->crmv,
-            "nome" => $request->nome,
-            "especialidade" => $request->especialidade,
-        ];
-
-        array_push($aux, $novo);
-        session(['veterinarios' => $aux]);
+        Veterinario::create(['nome' => $request->nome, 'crmv'=> $request->crmv,'especialidade_id'=> $request->es]);
 
 
 
@@ -80,13 +80,19 @@ class VeterinarioController extends Controller
      */
     public function show($id)
     {
-        $aux = session('veterinarios');
+        $aux = Veterinario::all()->toArray();
+
+
         
-        $index = array_search($id, array_column($aux, 'crmv'));
+        $index = array_search($id, array_column($aux, 'id'));
 
         $dados = $aux[$index];
 
-        return view('veterinarios.show', compact('dados'));
+        $auxEsp = Especialidade::find($dados['especialidade_id']);
+        
+
+
+        return view('veterinarios.show')->with('dados', $dados)->with('especialidade', $auxEsp);
     }
 
     /**
@@ -97,13 +103,13 @@ class VeterinarioController extends Controller
      */
     public function edit($id)
     {
-        $aux = session('veterinarios');
+        $aux = Veterinario::all()->toArray();
             
-        $index = array_search($id, array_column($aux, 'crmv'));
+        $index = array_search($id, array_column($aux, 'id'));
 
         $dados = $aux[$index];    
 
-        return view('veterinarios.edit', compact('dados'));  
+        return view('veterinarios.edit',compact(['dados']));
     }
 
     /**
@@ -115,18 +121,14 @@ class VeterinarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $aux = session('veterinarios');
+        $aux = Veterinario::find($id);
+
         
-        $index = array_search($id, array_column($aux, 'crmv'));
+    
 
-        $novo = [
-            "crmv" => $request->crmv,
-            "nome" => $request->nome,
-            "especialidade" => $request->especialidade,
-        ];
-
-        $aux[$index] = $novo;
-        session(['veterinarios' => $aux]);
+        $aux->fill(['nome' => $request->nome, 'crmv'=> $request->crmv,'especialidade_id'=> $request->es]);
+        
+        $aux->save();
 
         return redirect()->route('veterinarios.index');
     }
@@ -139,14 +141,7 @@ class VeterinarioController extends Controller
      */
     public function destroy($id)
     {
-        $aux = session('veterinarios');
-        
-        $index = array_search($id, array_column($aux, 'crmv')); 
-
-        unset($aux[$index]);
-
-        session(['veterinarios' => $aux]);
-
+        Veterinario::destroy($id);
         return redirect()->route('veterinarios.index');
     }
 }

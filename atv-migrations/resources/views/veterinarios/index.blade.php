@@ -49,7 +49,7 @@
             <x-datatable 
                 title="Veterinario" 
                 crud="veterinarios" 
-                :header="['crmv', 'nome', 'especialidade', 'ações']" 
+                :header="['id', 'nome','crmv' , 'ações']" 
                 :data="$veterinarios"
                 :hide="[true, false, true, false]" 
             /> 

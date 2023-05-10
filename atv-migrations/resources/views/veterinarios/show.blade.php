@@ -9,10 +9,13 @@
 <body>
     <a href="{{route('veterinarios.index')}}">Voltar</a>
     <br>
+    <label>ID: </label>{{$dados['id']}}
+    <br>
     <label>CRMV: </label>{{$dados['crmv']}}
     <br>
     <label>Nome: </label>{{$dados['nome']}}
     <br>
-    <label>ESPECIALIDADE: </label>{{$dados['especialidade']}}
+    <label>ESPECIALIDADE: </label>{{$especialidade['nome']}}
+    
 </body>
 </html>

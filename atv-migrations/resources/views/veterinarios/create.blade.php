@@ -35,20 +35,22 @@
                 </div>
             </div>
         </div>
+        
         <div class="row">
             <div class="col" >
                 <div class="form-floating mb-3">
-                    <input 
-                        type="text" 
-                        class="form-control" 
-                        name="especialidade" 
-                        placeholder="Especialidade"
-                        value="{{old('especialidade')}}"
-                    />
+                <select class="form-select" name="es" aria-label="Default select example">
+                    <!-- <option selected>Especialidade do Veterinario</option> -->
+                    <?php foreach($dados as $itens){ ?>
+                        <option value="<?php echo  $itens['id']?>"> <?php echo  $itens['nome']?> </option>
+                    <?php } ?>
+                    
+                </select>
                     <label for="especialidade">Especialidade do Veterinario</label>
                 </div>
             </div>
         </div>
+        
         <div class="row">
             <div class="col">
                 <a href="{{route('veterinarios.index')}}" class="btn btn-secondary btn-block align-content-center">
