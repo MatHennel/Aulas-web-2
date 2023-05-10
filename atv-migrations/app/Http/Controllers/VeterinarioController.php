@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+Use \App\Models\Veterinario;
+
+
+
+
 class VeterinarioController extends Controller
 {
     /**
@@ -28,7 +33,7 @@ class VeterinarioController extends Controller
     }
     public function index()
     {
-        $veterinarios = session('veterinarios');
+        $veterinarios = Veterinario::all();
         return view('veterinarios.index', compact(['veterinarios']));
     }
 
@@ -61,6 +66,8 @@ class VeterinarioController extends Controller
 
         array_push($aux, $novo);
         session(['veterinarios' => $aux]);
+
+
 
         return redirect()->route('veterinarios.index');
     }
