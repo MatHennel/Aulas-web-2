@@ -15,9 +15,14 @@ use App\Http\Controllers\EixoController;
 |
 */
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('templates.main')->with('titulo', "");
+})->name('index');
 
 Route::resource('eixos','EixoController');
 
