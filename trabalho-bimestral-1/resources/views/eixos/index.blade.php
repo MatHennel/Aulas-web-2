@@ -7,11 +7,12 @@
 
     <div class="row">
         <div class="col">
+            
             <x-datatable
                 title="Eixos" 
                 crud="eixos" 
                 :header="['id','nome','ações']"
-                :data="$dados"
+                :data="$eixos"
                 :hide="[true,false,false]"
             /> 
         </div>

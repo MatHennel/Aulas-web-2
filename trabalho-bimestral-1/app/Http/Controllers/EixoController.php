@@ -68,6 +68,8 @@ class EixoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Eixo::destroy($id);
+
+        return redirect()->route('eixos.index');
     }
 }

@@ -7,7 +7,7 @@
             @foreach ($header as $item)
 
                 @if($hide[$cont])
-                    <th scope="col" class="d-none">{{ strtoupper($item) }}</th>
+                    <th scope="col" class="d-none d-md-table-cell">{{ strtoupper($item) }}</th>
                 @else
                     <th scope="col">{{ strtoupper($item) }}</th>
                 @endif
@@ -19,7 +19,7 @@
         <tbody>
             @foreach ($data as $item)
                 <tr>
-                    <td class="d-none d-md-table-cell">{{ $item[$header[0]] }}</td>
+                    <td class="d-none">{{ $item[$header[0]] }}</td>
                     <td>{{ $item[$header[1]] }}</td>
                     <td class="d-none d-md-table-cell">{{ $item[$header[2]] }}</td>
                     
@@ -50,3 +50,4 @@
         </tbody>
     </table>
 </div>
+
