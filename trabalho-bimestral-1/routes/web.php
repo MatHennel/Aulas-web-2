@@ -15,11 +15,22 @@ use App\Http\Controllers\EixoController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+
+// Route::get('/', function () {
+//     return view('templates.main')->with('titulo', "");
+// })->name('index');
+
+Route::redirect('/','/eixos',301);
 
 Route::resource('eixos','EixoController');
+
+Route::resource('cursos','CursoController');
+
+Route::resource('professores','ProfessorController');
 
 
 

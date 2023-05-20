@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use \App\Models\Eixo;
+
 class EixoController extends Controller
 {
     /**
@@ -12,7 +14,11 @@ class EixoController extends Controller
     public function index()
     {
         //
-        return view('eixos.index');
+        
+        $eixos = Eixo::all();
+        // dd($eixos);
+        return view('eixos.index', compact(['eixos']));
+
     }
 
     /**
@@ -20,7 +26,7 @@ class EixoController extends Controller
      */
     public function create()
     {
-        //
+        return view('eixos.create');
     }
 
     /**
@@ -28,38 +34,50 @@ class EixoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Eixo::create(['nome' => $request->nome]);
+
+        return redirect()->route('eixos.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $dados = Eixo::find($id)->toArray();
+
+        return view('eixos.edit',compact('dados'));
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $aux = Eixo::find($id);
+        
+        $aux->fill(['nome' => $request->nome]);
+        $aux->save();
+
+        return redirect()->route('eixos.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        Eixo::destroy($id);
+
+        return redirect()->route('eixos.index');
     }
 }

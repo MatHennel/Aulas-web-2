@@ -13,26 +13,8 @@ Use \App\Models\Especialidade;
 
 class VeterinarioController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
-     public $veterinarios = [[
-        "crmv" => 1,
-        "nome" => "Matheus Hennel",
-        "especialidade" => "Cardiologista"
-    ]];
-
-    public function __construct() {
-        
-        $aux = session('veterinarios');
-
-        if(!isset($aux)) {
-            session(['veterinarios' => $this->veterinarios]);
-        }
-    }
+     
     public function index()
     {
         $veterinarios = Veterinario::all();
@@ -41,11 +23,7 @@ class VeterinarioController extends Controller
         return view('veterinarios.index', compact(['veterinarios']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  
     public function create()
     {
 
@@ -55,12 +33,7 @@ class VeterinarioController extends Controller
         return view('veterinarios.create',compact(['dados']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   
     public function store(Request $request)
     {
         // echo $request->es;
@@ -72,12 +45,7 @@ class VeterinarioController extends Controller
         return redirect()->route('veterinarios.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show($id)
     {
         $aux = Veterinario::all()->toArray();
@@ -95,30 +63,17 @@ class VeterinarioController extends Controller
         return view('veterinarios.show')->with('dados', $dados)->with('especialidade', $auxEsp);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit($id)
     {
-        $aux = Veterinario::all()->toArray();
-            
-        $index = array_search($id, array_column($aux, 'id'));
+        $dados = Veterinario::find($id);
 
-        $dados = $aux[$index];    
+        $esp = Especialidade::find($dados->especialidade_id);
 
-        return view('veterinarios.edit',compact(['dados']));
+        return view('veterinarios.edit')->with('dados', $dados)->with('esp', $esp);;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function update(Request $request, $id)
     {
         $aux = Veterinario::find($id);
@@ -133,12 +88,7 @@ class VeterinarioController extends Controller
         return redirect()->route('veterinarios.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function destroy($id)
     {
         Veterinario::destroy($id);

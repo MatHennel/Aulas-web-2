@@ -41,7 +41,7 @@
                 <div class="form-floating mb-3">
                 <select class="form-select" name="es" aria-label="Default select example">
                     <!-- <option selected>Especialidade do Veterinario</option> -->
-                    <?php foreach($dados as $itens){ ?>
+                    <?php foreach($esp as $itens){ ?>
                         <option value="<?php echo  $itens['id']?>"> <?php echo  $itens['nome']?> </option>
                     <?php } ?>
                     
