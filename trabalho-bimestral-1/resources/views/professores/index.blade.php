@@ -18,16 +18,16 @@
         @foreach ($professores as $item)
         <tr>
             <td>{{ $item['nome'] }}</td>
-            @foreach($eixos as $eixo)
-            @if($item['eixo_id'] == $eixo['id'])
-            <td>{{ $eixo['nome']}}</td>
-            @endif
-            @endforeach
-            @if($item['ativo'] == 0)
-            <td>INATIVO</td>
-            @elseif($item['ativo'] == 1)
-            <td>ATIVO</td>
-            @endif
+                @foreach($eixos as $eixo)
+                    @if($item['eixo_id'] == $eixo['id'])
+                        <td>{{ $eixo['nome']}}</td>
+                    @endif
+                @endforeach
+                    @if($item['ativo'] == 0)
+                        <td>INATIVO</td>
+                    @elseif($item['ativo'] == 1)
+                        <td>ATIVO</td>
+                 @endif
 
         
             <td><a href="{{ route('professores.show', $item['id']) }}">info</a></td>
