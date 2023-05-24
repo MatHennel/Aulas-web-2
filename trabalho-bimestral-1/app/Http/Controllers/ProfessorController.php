@@ -34,6 +34,7 @@ class ProfessorController extends Controller
      */
     public function store(Request $request)
     {
+        
         Professor::create(['nome' => $request->nome, 'email' => $request->email, 'siape' => $request->siape, 'eixo_id' => $request->eixo_id, 'ativo' => $request->status]);
 
         return redirect()->route('professores.index');

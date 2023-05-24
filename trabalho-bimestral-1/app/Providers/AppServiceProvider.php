@@ -3,26 +3,18 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+// Importa o Blade
 use Illuminate\Support\Facades\Blade;
 
+class AppServiceProvider extends ServiceProvider {
 
-class AppServiceProvider extends ServiceProvider
-{
-    /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
+    public function register() {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        //
+    public function boot() {
+        
+        // Registra o componente com o alias "datalist"
         Blade::component('components.datatable', 'datatable');
     }
 }

@@ -61,7 +61,7 @@ class DisciplinaController extends Controller
         $disciplina = Disciplina::find($id);
         $cursos = Curso::all();
 
-        return view('disciplinas.edit')->with('cursos',$cursos)->with('disciplina',$disciplina);
+        return view('disciplinas.edit')->with('dados',$cursos)->with('disciplina',$disciplina);
 
         
     }
