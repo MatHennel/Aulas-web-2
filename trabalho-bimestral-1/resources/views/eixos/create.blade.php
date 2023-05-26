@@ -12,10 +12,19 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} " 
                         name="nome" 
                         placeholder="Nome"
+                        value="{{old('nome')}}"
+                        
                     />
+
+                    @if($errors->has('nome'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
+                    @endif
+
                     <label for="nome">Nome do Eixo</label>
                 </div>
             </div>
@@ -36,6 +45,7 @@
                 </a>
             </div>
         </div>
+
     </form>
 
 @endsection

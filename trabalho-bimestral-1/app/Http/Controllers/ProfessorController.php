@@ -34,6 +34,23 @@ class ProfessorController extends Controller
      */
     public function store(Request $request)
     {
+
+        $regras = [
+            'nome' => 'required|max:100|min:10',
+            'email' => 'required|max:250|min:15|unique:professores',
+            'siape' => 'required|max:10|min:8|unique:professores',
+            'ativo' => 'required'
+        ];
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!",
+            "unique" => "Já existe esse :attribute cadastrado!"
+        ];
+
+        $request->validate($regras,$msgs);
+        
         
         Professor::create(['nome' => $request->nome, 'email' => $request->email, 'siape' => $request->siape, 'eixo_id' => $request->eixo_id, 'ativo' => $request->status]);
 
@@ -71,6 +88,22 @@ class ProfessorController extends Controller
     {
         //
         $aux = Professor::find($id);
+
+        $regras = [
+            'nome' => 'required|max:100|min:10',
+            'email' => 'required|max:250|min:15|unique:professores',
+            'siape' => 'required|max:10|min:8|unique:professores',
+            'ativo' => 'required'
+        ];
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!",
+            "unique" => "Já existe esse :attribute cadastrado!"
+        ];
+
+        $request->validate($regras,$msgs);
         
         $aux->fill(['nome' => $request->nome, 'email' => $request->email, 'siape' => $request->siape, 'eixo_id' => $request->eixo_id, 'ativo' => $request->status]);
         $aux->save();

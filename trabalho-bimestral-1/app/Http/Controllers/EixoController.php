@@ -34,6 +34,19 @@ class EixoController extends Controller
      */
     public function store(Request $request)
     {
+
+        $regras = ([
+            'nome' => 'required|max:50|min:10'
+        ]);
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!"
+        ];
+
+        $request->validate($regras,$msgs);
+
         Eixo::create(['nome' => $request->nome]);
 
         return redirect()->route('eixos.index');
@@ -64,6 +77,18 @@ class EixoController extends Controller
     public function update(Request $request, $id)
     {
         $aux = Eixo::find($id);
+
+        $regras = ([
+            'nome' => 'required|max:50|min:10'
+        ]);
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!"
+        ];
+
+        $request->validate($regras,$msgs);
         
         $aux->fill(['nome' => $request->nome]);
         $aux->save();

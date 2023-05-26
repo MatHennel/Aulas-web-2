@@ -11,7 +11,7 @@
     <div class="row">
             <div class="col" >
                 <div class="mb-3">
-                    <input type="radio" class="btn-check" name="status" id="option1" autocomplete="off" value=1>
+                    <input type="radio" class="btn-check" name="status" id="option1" autocomplete="off" value=1 checked>
                     <label class="btn btn-outline-success" for="option1">Ativo</label>
                     <input type="radio" class="btn-check" name="status" id="option2" autocomplete="off" value=0>
                     <label class="btn btn-outline-danger" for="option2">Inativo</label>
@@ -23,10 +23,16 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} " 
                         name="nome" 
                         placeholder="Nome"
+                        value="{{old('nome')}}"
                     />
+                    @if($errors->has('nome'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
+                    @endif
                     <label for="nome">Nome do Professor</label>
                 </div>
             </div>
@@ -36,10 +42,18 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }} " 
+ 
                         name="email" 
                         placeholder="Email"
+                        value="{{old('email')}}"
+
                     />
+                    @if($errors->has('email'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('email') }}
+                        </div>
+                    @endif
                     <label for="email">Email do Professor</label>
                 </div>
             </div>
@@ -49,10 +63,18 @@
                 <div class="form-floating mb-3">
                     <input 
                         type='number'
-                        class="form-control" 
+                        class="form-control {{ $errors->has('siape') ? 'is-invalid' : '' }} " 
+
                         name="siape" 
                         placeholder="Siape"
+                        value="{{old('siape')}}"
+
                     />
+                    @if($errors->has('siape'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('siape') }}
+                        </div>
+                    @endif
                     <label for="siape">SIAPE do Professor</label>
                 </div>
             </div>

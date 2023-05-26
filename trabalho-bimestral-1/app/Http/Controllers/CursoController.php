@@ -36,6 +36,22 @@ class CursoController extends Controller
      */
     public function store(Request $request)
     {
+        $regras = [
+
+            'nome' => 'required|max:50|min:10',
+            'sigla' => 'required|max:8|min:2',
+            'tempo' => 'required|max:2|min:1'
+        ];
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!"
+        ];
+
+        $request->validate($regras,$msgs);
+
+
         Curso::create(['nome' => $request->nome , 'sigla' => $request->sigla , 'tempo' => $request->tempo, 'eixo_id' => $request->eixo_id]);
 
         return redirect()->route('cursos.index');
@@ -77,6 +93,20 @@ class CursoController extends Controller
     {
         //
         $aux = Curso::find($id);
+        $regras = [
+
+            'nome' => 'required|max:50|min:10',
+            'sigla' => 'required|max:8|min:2',
+            'tempo' => 'required|max:2|min:1'
+        ];
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!"
+        ];
+
+        $request->validate($regras,$msgs);
         
         $aux->fill(['nome' => $request->nome , 'sigla' => $request->sigla , 'tempo' => $request->tempo, 'eixo_id' => $request->eixo_id]);
         $aux->save();

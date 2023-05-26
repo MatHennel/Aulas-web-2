@@ -37,6 +37,18 @@ class DisciplinaController extends Controller
      */
     public function store(Request $request)
     {
+        $regras = [
+            'nome' => 'required|max:100|min:10',
+            'carga' => 'required|max:12|min:1',
+        ];
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!",
+        ];
+
+        $request->validate($regras,$msgs);
         
         Disciplina::create(['nome' => $request->nome,'curso_id'=>$request->curso_id,'carga'=>$request->carga]);
         return redirect()->route('disciplinas.index');
@@ -72,6 +84,18 @@ class DisciplinaController extends Controller
     public function update(Request $request, $id)
     {
         $disciplina = Disciplina::find($id);
+        $regras = [
+            'nome' => 'required|max:100|min:10',
+            'carga' => 'required|max:12|min:1',
+        ];
+
+        $msgs = [
+            "required" => "Preenchimento obrigatório!",
+            "max" => "Tamanho máximo de :max caracteres!",
+            "min" => "Tamanho mínimo de :min caracteres!",
+        ];
+
+        $request->validate($regras,$msgs);
         $disciplina->fill(['nome' => $request->nome,'curso_id'=>$request->curso_id,'carga'=>$request->carga]);
         $disciplina->save();
 

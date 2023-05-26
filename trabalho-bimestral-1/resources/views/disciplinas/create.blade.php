@@ -12,10 +12,17 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} " 
+
                         name="nome" 
                         placeholder="Nome"
+                        value="{{old('nome')}}"
                     />
+                    @if($errors->has('nome'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
+                    @endif
                     <label for="nome">Nome da Disciplina</label>
                 </div>
             </div>
@@ -25,10 +32,17 @@
                 <div class="form-floating mb-3">
                     <input 
                         type='number'
-                        class="form-control" 
+                        class="form-control {{ $errors->has('carga') ? 'is-invalid' : '' }} " 
+ 
                         name="carga" 
                         placeholder="carga"
+                        value="{{old('carga')}}"
                     />
+                    @if($errors->has('carga'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('carga') }}
+                        </div>
+                    @endif
                     <label for="carga">Carga Horária(numero de aulas)</label>
                 </div>
             </div>

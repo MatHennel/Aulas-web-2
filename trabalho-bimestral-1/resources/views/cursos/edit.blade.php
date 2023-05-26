@@ -14,11 +14,17 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} "
+
                         name="nome" 
                         placeholder="Nome"
                         value="{{$curso['nome']}}"
                     />
+                    @if($errors->has('nome'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
+                    @endif
                     <label for="nome">Nome do Curso</label>
                 </div>
             </div>
@@ -28,12 +34,18 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('sigla') ? 'is-invalid' : '' }} "
+ 
                         name="sigla" 
                         placeholder="Sigla"
                         value="{{$curso['sigla']}}"
                     />
-                    <label for="nome">Sigla do Curso</label>
+                    @if($errors->has('sigla'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('sigla') }}
+                        </div>
+                    @endif
+                    <label for="sigla">Sigla do Curso</label>
                 </div>
             </div>
         </div>
@@ -42,11 +54,17 @@
                 <div class="form-floating mb-3">
                     <input 
                         type='number'
-                        class="form-control" 
+                        class="form-control {{ $errors->has('tempo') ? 'is-invalid' : '' }} "
+ 
                         name="tempo" 
                         placeholder="Tempo"
                         value="{{$curso['tempo']}}"
                     />
+                    @if($errors->has('tempo'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('tempo') }}
+                        </div>
+                    @endif
                     <label for="tempo">Tempo do Curso</label>
                 </div>
             </div>

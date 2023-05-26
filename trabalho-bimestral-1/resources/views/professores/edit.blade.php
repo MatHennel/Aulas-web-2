@@ -25,11 +25,16 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }} " 
                         name="nome" 
                         placeholder="Nome"
                         value="{{$professor['nome']}}"
                     />
+                    @if($errors->has('nome'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('nome') }}
+                        </div>
+                    @endif
                     <label for="nome">Nome do Professor</label>
                 </div>
             </div>
@@ -39,11 +44,17 @@
                 <div class="form-floating mb-3">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }} " 
+
                         name="email" 
                         placeholder="Email"
                         value="{{$professor['email']}}"
                     />
+                    @if($errors->has('email'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('email') }}
+                        </div>
+                    @endif
                     <label for="email">Email do Professor</label>
                 </div>
             </div>
@@ -53,11 +64,17 @@
                 <div class="form-floating mb-3">
                     <input 
                         type='number'
-                        class="form-control" 
+                        class="form-control {{ $errors->has('siape') ? 'is-invalid' : '' }} " 
+ 
                         name="siape" 
                         placeholder="Siape"
                         value="{{$professor['siape']}}"
                     />
+                    @if($errors->has('siape'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('siape') }}
+                        </div>
+                    @endif
                     <label for="siape">Siape do Professor</label>
                 </div>
             </div>
