@@ -11,9 +11,7 @@
                 title="Cursos" 
                 crud="cursos" 
                 :header="['id', 'nome' , 'sigla']" 
-                :data="[
-                    'dados1' => $dados
-                    ]"
+                :data="$dados"
                 :hide="[true, false, false]" 
             /> 
         </div>

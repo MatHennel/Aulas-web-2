@@ -11,10 +11,7 @@
                 title="Disciplinas" 
                 crud="disciplinas" 
                 :header="['id', 'nome' , 'curso']" 
-                :data="[
-                    'dados1' => $disciplinas,
-                    'dados2' => $cursos
-                    ]"
+                :data="$disciplinas"
                 :hide="[true, false, false]" 
             /> 
         </div>

@@ -16,12 +16,18 @@ class DisciplinaController extends Controller
      */
     public function index()
     {
-        $cursos = Curso::all();
         $disciplinas = Disciplina::all();
+        $cursos = Curso::all();
+        foreach ($disciplinas as $professor) {
+            $curso = $cursos->firstWhere('id', $professor->curso_id);
+            $professor->curso = $curso->nome;
+        }
 
-        return view('disciplinas.index')->with('cursos',$cursos)->with('disciplinas',$disciplinas);
-
+        return view('disciplinas.index', compact('disciplinas'));
     }
+
+
+    
 
     /**
      * Show the form for creating a new resource.

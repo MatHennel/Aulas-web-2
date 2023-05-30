@@ -11,9 +11,7 @@
                 title="Eixos" 
                 crud="eixos" 
                 :header="['id', 'nome']" 
-                :data="[
-                    'dados1' => $eixos
-                    ]"
+                :data="$eixos"
                 :hide="[true, false, false]" 
             /> 
         </div>

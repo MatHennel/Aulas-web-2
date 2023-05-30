@@ -19,9 +19,9 @@ class DocenciaController extends Controller
     {
         $disciplinas = Disciplina::all();
         $professores = Professor::where('ativo','1')->get();
-        $vinculo = ProfessorDisciplina::all();
+        $vinculos = ProfessorDisciplina::all();
 
-        return view('docencia.index')->with('disciplinas',$disciplinas)->with('professores',$professores)->with('vinculo',$vinculo);
+        return view('docencias.index')->with('disciplinas',$disciplinas)->with('professores',$professores)->with('vinculo',$vinculos);
     }
 
     /**
@@ -37,7 +37,19 @@ class DocenciaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        ProfessorDisciplina::truncate();
+
+        foreach ($request as $r) {
+            if (!empty($r->professor)) {
+                ProfessorDisciplina::create([
+                    'professor_id' => $r->professor,
+                    'disciplina_id' => $r->disciplina_id
+                ]);
+            }
+        }
+
+        return redirect()->route('disciplinas.index');
+       
     }
 
     /**

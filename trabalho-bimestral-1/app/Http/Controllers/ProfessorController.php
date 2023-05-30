@@ -17,7 +17,12 @@ class ProfessorController extends Controller
     {
         $professores = Professor::all();
         $eixos = Eixo::all();
-        return view('professores.index',compact(['professores']),compact('eixos'));
+        foreach ($professores as $professor) {
+            $eixo = $eixos->firstWhere('id', $professor->eixo_id);
+            $professor->eixo = $eixo->nome;
+        }
+
+        return view('professores.index', compact('professores'));
     }
 
     /**
@@ -35,21 +40,21 @@ class ProfessorController extends Controller
     public function store(Request $request)
     {
 
-        $regras = [
-            'nome' => 'required|max:100|min:10',
-            'email' => 'required|max:250|min:15|unique:professores',
-            'siape' => 'required|max:10|min:8|unique:professores',
-            'ativo' => 'required'
+         $regras = [
+
+            'nome' => 'required|max:50|min:10',
+            'sigla' => 'required|max:8|min:2',
+            'tempo' => 'required|max:2|min:1'
         ];
 
         $msgs = [
             "required" => "Preenchimento obrigatório!",
             "max" => "Tamanho máximo de :max caracteres!",
-            "min" => "Tamanho mínimo de :min caracteres!",
-            "unique" => "Já existe esse :attribute cadastrado!"
+            "min" => "Tamanho mínimo de :min caracteres!"
         ];
 
         $request->validate($regras,$msgs);
+
         
         
         Professor::create(['nome' => $request->nome, 'email' => $request->email, 'siape' => $request->siape, 'eixo_id' => $request->eixo_id, 'ativo' => $request->status]);

@@ -11,11 +11,8 @@
                 title="Professores" 
                 crud="professores" 
                 :header="['id', 'nome' , 'eixo', 'status']" 
-                :data="[
-                    'dados1' => $professores,
-                    'dados2' => $eixos
-                    ]"
-                :hide="[true, false, false]" 
+                :data="$professores"
+                :hide="[true, false, false, false]" 
             /> 
         </div>
     </div>
