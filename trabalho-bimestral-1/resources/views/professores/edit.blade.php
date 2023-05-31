@@ -65,7 +65,6 @@
                     <input 
                         type='number'
                         class="form-control {{ $errors->has('siape') ? 'is-invalid' : '' }} " 
- 
                         name="siape" 
                         placeholder="Siape"
                         value="{{$professor['siape']}}"

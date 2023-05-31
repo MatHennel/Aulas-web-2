@@ -40,17 +40,18 @@ class ProfessorController extends Controller
     public function store(Request $request)
     {
 
-         $regras = [
-
-            'nome' => 'required|max:50|min:10',
-            'sigla' => 'required|max:8|min:2',
-            'tempo' => 'required|max:2|min:1'
+        $regras = [
+            'nome' => 'required|max:100|min:10',
+            'email' => 'required|max:250|min:15|unique:professores',
+            'siape' => 'required|max:10|min:8|unique:professores',
+            'ativo' => 'required'
         ];
 
         $msgs = [
             "required" => "Preenchimento obrigatório!",
             "max" => "Tamanho máximo de :max caracteres!",
-            "min" => "Tamanho mínimo de :min caracteres!"
+            "min" => "Tamanho mínimo de :min caracteres!",
+            "unique" => "Já existe esse :attribute cadastrado!"
         ];
 
         $request->validate($regras,$msgs);
@@ -96,8 +97,8 @@ class ProfessorController extends Controller
 
         $regras = [
             'nome' => 'required|max:100|min:10',
-            'email' => 'required|max:250|min:15|unique:professores',
-            'siape' => 'required|max:10|min:8|unique:professores',
+            'email' => 'required|max:250|min:15|',
+            'siape' => 'required|max:10|min:8|',
             'ativo' => 'required'
         ];
 
