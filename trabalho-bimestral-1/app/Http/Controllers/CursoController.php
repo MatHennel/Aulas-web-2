@@ -51,8 +51,17 @@ class CursoController extends Controller
 
         $request->validate($regras,$msgs);
 
+        $dados = $request->only(['nome', 'sigla', 'tempo']);
+    
+        $curso = new Curso($dados);
+        
+        $eixo = Eixo::find($request->input('eixo_id'));
+        
+        $curso->eixo()->associate($eixo);
+        
+        $curso->save();
+        
 
-        Curso::create(['nome' => $request->nome , 'sigla' => $request->sigla , 'tempo' => $request->tempo, 'eixo_id' => $request->eixo_id]);
 
         return redirect()->route('cursos.index');
     }

@@ -53,6 +53,7 @@
                             <li><a href="{{route('cursos.index')}}" class="dropdown-item">Cursos</a></li>
                             <li><a href="{{route('professores.index')}}" class="dropdown-item">Professores</a></li>
                             <li><a href="{{route('disciplinas.index')}}" class="dropdown-item">Disciplinas</a></li>
+                            <li><a href="{{route('alunos.index')}}" class="dropdown-item">Alunos</a></li>
 
                         </ul>
                     </li>

@@ -10,10 +10,6 @@
 
 <form action="{{ route('docencias.store') }}" method="POST">
     @csrf
-
-
-
-
     <div>
     <table class="table align-middle caption-top table-striped">
         <thead >
@@ -26,20 +22,15 @@
         <tbody>
             @foreach ($disciplinas as $item)
                 <tr>
-                   
-                    <td name="disciplinas_id" value="{{$item['id']}} "> {{$item['nome']}} </td>
-
-                    
-                
-                   <td>
-                   <select class="form-select" name="professor_id">
-                   <option></option>
-                    <?php foreach($professores as $itens){?>
-                        
-                        <option value="<?php echo $itens['id']?>">   <?php   echo $itens['nome']?>  </option>
-                    <?php } ?> 
-                   </td>
-
+                    <td name="disciplinas_id" value="{{$item['id']}}"> {{$item['nome']}} </td>
+                    <td>
+                        <select class="form-select" name="professores_id[]">
+                            <option></option>
+                            @foreach ($professores as $itens)
+                                <option value="{{ $itens['id'] }}">{{ $itens['nome'] }}</option>
+                            @endforeach
+                        </select>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

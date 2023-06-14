@@ -12,6 +12,16 @@ class Disciplina extends Model
 
     use SoftDeletes;
 
-    protected $fillable = ['nome','curso_id','carga'];
+    protected $fillable = ['nome','carga','curso_id'];
+
+    public function curso(){
+        return $this->belongsTo('App\Models\Curso');
+    }
+    
+    
+
+    public function aluno(){
+        return $this->belongsToMany('App\Models\Aluno','matriculas');
+    }
 
 }

@@ -54,13 +54,27 @@ class ProfessorController extends Controller
             "unique" => "Já existe esse :attribute cadastrado!"
         ];
 
-        $request->validate($regras,$msgs);
+        
 
         
         
-        Professor::create(['nome' => $request->nome, 'email' => $request->email, 'siape' => $request->siape, 'eixo_id' => $request->eixo_id, 'ativo' => $request->status]);
+       $professor = new Professor();
+
+        $eixo = Eixo::find($request->eixo_id);
+
+        if(isset($eixo)){
+            $professor->nome = $request->nome;
+            $professor->email = $request->email;
+            $professor->siape = $request->siape;
+            $professor->ativo = $request->status;
+            $professor->eixo()->associate($eixo);
+            $professor->save();
+
+        }
 
         return redirect()->route('professores.index');
+
+
     }
 
     /**
@@ -109,10 +123,18 @@ class ProfessorController extends Controller
             "unique" => "Já existe esse :attribute cadastrado!"
         ];
 
-        $request->validate($regras,$msgs);
-        
-        $aux->fill(['nome' => $request->nome, 'email' => $request->email, 'siape' => $request->siape, 'eixo_id' => $request->eixo_id, 'ativo' => $request->status]);
-        $aux->save();
+
+        $eixo = Eixo::find($request->eixo_id);
+
+        if(isset($eixo)){
+            $aux->nome = $request->nome;
+            $aux->email = $request->email;
+            $aux->siape = $request->siape;
+            $aux->ativo = $request->status;
+            $aux->eixo()->associate($eixo);
+            $aux->save();
+
+        }
 
         return redirect()->route('professores.index');
     }
