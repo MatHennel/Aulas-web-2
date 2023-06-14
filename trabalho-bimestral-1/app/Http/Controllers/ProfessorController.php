@@ -44,7 +44,7 @@ class ProfessorController extends Controller
             'nome' => 'required|max:100|min:10',
             'email' => 'required|max:250|min:15|unique:professores',
             'siape' => 'required|max:10|min:8|unique:professores',
-            'ativo' => 'required'
+            'status' => 'required'
         ];
 
         $msgs = [
@@ -55,6 +55,7 @@ class ProfessorController extends Controller
         ];
 
         
+        $request->validate($regras,$msgs);
 
         
         
@@ -113,7 +114,7 @@ class ProfessorController extends Controller
             'nome' => 'required|max:100|min:10',
             'email' => 'required|max:250|min:15|',
             'siape' => 'required|max:10|min:8|',
-            'ativo' => 'required'
+            'status' => 'required'
         ];
 
         $msgs = [
@@ -122,6 +123,8 @@ class ProfessorController extends Controller
             "min" => "Tamanho mínimo de :min caracteres!",
             "unique" => "Já existe esse :attribute cadastrado!"
         ];
+
+        $request->validate($regras,$msgs);
 
 
         $eixo = Eixo::find($request->eixo_id);

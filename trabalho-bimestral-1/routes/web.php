@@ -29,3 +29,8 @@ Route::resource('docencias','DocenciaController');
 
 Route::resource('alunos','AlunoController');
 
+Route::get('/matriculas/{id}', 'MatriculaController@index')->name('matriculas.index');
+
+Route::post('/matriculas/store', 'MatriculaController@store')->name('matriculas.store');
+
+

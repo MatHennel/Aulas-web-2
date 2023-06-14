@@ -19,10 +19,10 @@ class DocenciaController extends Controller
     {
         $disciplinas = Disciplina::all();
         $professores = Professor::where('ativo','1')->get();
-        $vinculos = ProfessorDisciplina::with(['professor_id', 'disciplina_id'])->get();
+        $vinculos = ProfessorDisciplina::with(['professores','disciplinas']);
+       
 
-
-        return view('docencias.index')->with('disciplinas',$disciplinas)->with('professores',$professores)->with('vinculo',$vinculos);
+        return view('docencias.index')->with('disciplinas',$disciplinas)->with('professores',$professores)->with('vinculos',$vinculos);
     }
 
     /**
@@ -39,24 +39,32 @@ class DocenciaController extends Controller
     public function store(Request $request)
 {
     $professores = $request->input('professores_id');
+    ProfessorDisciplina::truncate();
 
-    foreach ($professores as $professorId => $disciplinaId) {
+    
+
+    foreach ($professores as $professorIdDisciplinaId) {
+        $ids = explode('_', $professorIdDisciplinaId);
+        $disciplinaId = $ids[0];
+        $professorId = $ids[1];
         
-
+        
         $professor = Professor::find($professorId);
+
 
         if(isset($professor)){
             
-            if (isset($disciplinaId)) {
-            $obj_disciplina = Disciplina::find($disciplinaId);
+            
+            $disciplina = Disciplina::find($disciplinaId);
+            
 
-            if (isset($obj_disciplina)) {
+            if (isset($disciplina)) {
                 $obj_professor_disciplina = new ProfessorDisciplina();
-                $obj_professor_disciplina->professor()->associate($obj_disciplina);
-                $obj_professor_disciplina->disciplina()->associate($professor);
+                $obj_professor_disciplina->professor()->associate($professor);
+                $obj_professor_disciplina->disciplina()->associate($disciplina);
                 $obj_professor_disciplina->save();
             }
-        }
+        
         }
 
         

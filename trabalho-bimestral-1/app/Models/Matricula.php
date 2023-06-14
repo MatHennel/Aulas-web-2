@@ -13,8 +13,6 @@ class Matricula extends Model
 
     use SoftDeletes;
 
-    protected $fillable = ['descricao'];
-
     public function aluno(){
         return $this->belongsTo('App\Models\Aluno');
     }

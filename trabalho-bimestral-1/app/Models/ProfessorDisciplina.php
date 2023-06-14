@@ -11,14 +11,14 @@ class ProfessorDisciplina extends Model
 
     protected $table = "professor_disciplinas";
 
-    protected $fillable = ['professor_id','disciplina_id'];
+    
 
 
     public function disciplina(){
-        return $this->hasMany('App\Models\Disciplina','professor_disciplinas');
+        return $this->belongsTo('App\Models\Disciplina');
     }
 
     public function professor(){
-        return $this->belongsTo('App\Models\Professor','professor_disciplinas');
+        return $this->belongsTo('App\Models\Professor');
     }
 }

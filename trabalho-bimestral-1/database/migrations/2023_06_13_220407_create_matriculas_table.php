@@ -18,7 +18,6 @@ class CreateMatriculasTable extends Migration
             $table->foreign('aluno_id')->references('id')->on('alunos');
             $table->unsignedBigInteger('disciplina_id');
             $table->foreign('disciplina_id')->references('id')->on('disciplinas');
-            $table->string('descricao');
             $table->primary(['aluno_id', 'disciplina_id']);
             $table->softDeletes();
             $table->timestamps();

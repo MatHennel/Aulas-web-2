@@ -20,5 +20,9 @@ class Professor extends Model
         return $this->belongsTo('App\Models\Eixo');
     }
 
+    public function disciplina(){
+        return $this->hasMany('App\Models\Disciplina','professor_disciplinas');
+    }
+
     
 }
