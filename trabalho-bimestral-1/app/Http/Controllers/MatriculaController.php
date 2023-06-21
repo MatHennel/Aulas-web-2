@@ -23,7 +23,7 @@ class MatriculaController extends Controller
     
         $matriculas = Matricula::where('aluno_id',$id)->with(['aluno', 'disciplina'])->get()->toArray();
     
-        return view('matriculas.index', compact('aluno', 'disciplinas', 'matriculas'));
+        return view('matriculas.index', compact('id', 'aluno', 'disciplinas', 'matriculas'));
     }
 
     public function store(Request $request){
@@ -34,38 +34,28 @@ class MatriculaController extends Controller
     
         if($disciplinas_id == null) return redirect()->route('alunos.index');
     
-        foreach ($disciplinas_id as $disciplinaIdAlunoId) {
-            $ids = explode('_', $disciplinaIdAlunoId);
-            $disciplinaId = $ids[0];
-            $alunoId = $ids[1];
-            
-            
-            $disciplina = Disciplina::find($disciplinaId);
+        $aluno = Aluno::find($request->input('aluno_id'));
 
-            $auxMatriculas = Matricula::all()->toArray();
+        if (isset($aluno)) {
 
-            
+            $aluno->disciplina()->detach();
 
-            
-
-            
-
-    
-    
-            if(isset($disciplina)){
-
+            foreach ($disciplinas_id as $disciplinaIdAlunoId) {
+                $ids = explode('_', $disciplinaIdAlunoId);
+                $disciplinaId = $ids[0];
+                $alunoId = $ids[1];
                 
-                $aluno = Aluno::find($alunoId);
-                
-    
-                if (isset($aluno)) {
+                $disciplina = Disciplina::find($disciplinaId);
+
+                $auxMatriculas = Matricula::all()->toArray();
+
+                if(isset($disciplina)){
                     $matricula = new Matricula();
-                    $aluno->disciplina()->detach($disciplinaId);
                     $matricula->aluno()->associate($aluno);
                     $matricula->disciplina()->associate($disciplina);
                     $matricula->save();
                 }
-            
+                
             }
     
             

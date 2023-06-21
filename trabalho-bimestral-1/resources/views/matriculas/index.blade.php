@@ -8,6 +8,7 @@
 
 <form action="{{ route('matriculas.store') }}" method="POST">
     @csrf
+    <input type="hidden" name="aluno_id" value="{{ $id }}">
     <div>
     <table class="table align-middle caption-top table-striped">
     <thead >
