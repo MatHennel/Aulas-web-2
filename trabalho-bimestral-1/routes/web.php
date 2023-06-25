@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\Nivel1;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,16 +23,18 @@ Route::resource('eixos','EixoController');
 
 Route::resource('cursos','CursoController');
 
-Route::resource('professores','ProfessorController');
+Route::resource('professores','ProfessorController');;
 
-Route::resource('disciplinas','DisciplinaController');
+Route::resource('disciplinas','DisciplinaController');;
 
-Route::resource('docencias','DocenciaController');
+Route::resource('docencias','DocenciaController');;
 
-Route::resource('alunos','AlunoController');
+Route::resource('alunos','AlunoController');;
 
-Route::get('/matriculas/{id}', 'MatriculaController@index')->name('matriculas.index');
+Route::get('/matriculas/{id}', 'MatriculaController@index')->name('matriculas.index');;
 
-Route::post('/matriculas/store', 'MatriculaController@store')->name('matriculas.store');
+Route::post('/matriculas/store', 'MatriculaController@store')->name('matriculas.store');;
+
+
 
 
