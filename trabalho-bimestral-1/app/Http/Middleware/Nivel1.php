@@ -22,13 +22,15 @@ class Nivel1
     public function handle(Request $request, Closure $next)
     {
 
-        $nivel = 3;
+        $nivel = 1;
         $routes = Route::currentRouteName();
 
         $route = explode('.',$routes);
 
         $submenus = $route[0];
-        $metodos = $route[1];
+        if (isset($route[1])) {
+    $metodos = $route[1];
+}
 
         Log::debug("route: $submenus");
 
