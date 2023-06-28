@@ -17,7 +17,7 @@ use App\Http\Middleware\Nivel1;
 
 Route::get('/', function () {
     return view('templates.main')->with('titulo', "");
-})->name('index');
+})->name('index.index');
 
 
 Route::resource('eixos','EixoController');
