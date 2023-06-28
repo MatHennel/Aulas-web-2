@@ -28,7 +28,7 @@
         <td name="disciplinas_id">{{ $item['nome'] }}</td>
         <td>
             <div class="form-check">
-            <input name='disciplinas_id[]' class="form-check-input" type="checkbox" value="{{ $item['id'] }}_{{ $aluno['id'] }}" {{ in_array($item['id'], array_column($matriculas, 'disciplina_id')) ? 'checked' : '' }}>
+            <input name='disciplinas_id[]' class="form-check-input" type="checkbox" value="{{ $item['id'] }}" {{ in_array($item['id'], array_column($matriculas, 'disciplina_id')) ? 'checked' : '' }}>
 
             </div>
         </td>

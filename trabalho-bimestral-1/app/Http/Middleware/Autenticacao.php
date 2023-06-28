@@ -33,20 +33,18 @@ class Autenticacao
     public function handle(Request $request, Closure $next)
     {
 
-        $nivel = 1;
+        $nivel = 2;
         $routes = Route::currentRouteName();
 
         $route = explode('.',$routes);
 
         $submenus = $route[0];
         
-    $metodos = $route[1];
+        $metodos = $route[1];
 
-
-        Log::debug("route: $submenus");
 
         if($nivel == 1){
-            if($submenus == 'cursos' || $submenus == 'eixos'){
+            if($submenus == 'cursos' || $submenus == 'eixos' || $submenus == 'index'){
                 if($metodos == 'index') return $next($request);
             }
         }else if($nivel == 2){

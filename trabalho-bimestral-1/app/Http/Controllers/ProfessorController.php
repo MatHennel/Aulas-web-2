@@ -15,11 +15,19 @@ class ProfessorController extends Controller
      */
     public function index()
     {
-        $professores = Professor::all();
+        
+        /*$professores = Professor::all();
         $eixos = Eixo::all();
         foreach ($professores as $professor) {
             $eixo = $eixos->firstWhere('id', $professor->eixo_id);
             $professor->eixo = $eixo->nome;
+        }*/
+        $professores = Professor::with(['eixo'])->get();
+        $p = 0;
+        foreach ($professores as $professor) { //usando orm para colocar o nome do eixo
+            $professor["eixo"] = $professor->eixo->nome;   
+            $professores[$p] = $professor;
+            $p++;
         }
 
         return view('professores.index', compact('professores'));
