@@ -57,6 +57,12 @@ class DisciplinaController extends Controller
         $request->validate($regras,$msgs);
         
         Disciplina::create(['nome' => $request->nome,'curso_id'=>$request->curso_id,'carga'=>$request->carga]);
+        $disciplina = new Disciplina();
+        $disciplina->nome = $request->nome;
+        $disciplina->carga = $request->carga;
+        $curso = Curso::find($request->curso_id);
+        $disciplina->curso()->associate($curso);
+        $disciplina->save();
         return redirect()->route('disciplinas.index');
     }
 

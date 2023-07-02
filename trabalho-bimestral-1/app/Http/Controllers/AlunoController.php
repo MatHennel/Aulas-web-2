@@ -62,7 +62,8 @@ class AlunoController extends Controller
 
         $aluno = new Aluno();
         $aluno->nome = $request->nome;
-        $aluno->curso()->associate($request->curso_id);
+        $curso = Curso::find($request->curso_id);
+        $aluno->curso()->associate($curso);
         $aluno->save();
 
         return redirect()->route('alunos.index');

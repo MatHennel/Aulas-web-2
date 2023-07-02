@@ -43,11 +43,8 @@ class MatriculaController extends Controller
             foreach ($disciplinas_id as $disciplinaIdAlunoId) {
                 $ids = explode('_', $disciplinaIdAlunoId);
                 $disciplinaId = $ids[0];
-                $alunoId = $ids[1];
                 
                 $disciplina = Disciplina::find($disciplinaId);
-
-                $auxMatriculas = Matricula::all()->toArray();
 
                 if(isset($disciplina)){
                     $matricula = new Matricula();
