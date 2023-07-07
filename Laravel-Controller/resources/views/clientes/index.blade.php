@@ -25,13 +25,11 @@
             <td><a href="{{ route('clientes.show', $item['id']) }}">info</a></td>
             <td><a href="{{ route('clientes.edit', $item['id']) }}">editar</a></td>
             <td>
-                <form action="{{ route('clientes.destroy', $item['id']) }}" method="POST">
-                    <!-- Token de Segurança -->
-                    <!-- Define o método de submissão como delete -->
-                    @csrf
-                    @method('DELETE')
-                    <input type='submit' value='remover'>
-                </form>
+            <form action="{{ route('skins.destroy', $item['id']) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit">Excluir</button>
+            </form>
             </td>
         </tr>
         @endforeach

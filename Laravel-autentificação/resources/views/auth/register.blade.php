@@ -44,7 +44,7 @@
                 {{ __('Already registered?') }}
             </a>
 
-            <a href="{{'/'}}" class="ml-3">Voltar</a>
+            <a href="{{'/'}}" class="ml-4">{{ __('Voltar') }}</a>
 
 
             <x-primary-button class="ml-4">

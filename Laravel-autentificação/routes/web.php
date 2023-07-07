@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SkinController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,12 +16,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('welcome')->with('titulo', "");
+})->name('index.index');;
+
+Route::resource('skins','SkinController');
+
+// Route::get('/', function () {
+//     return view('layouts.main')->with('titulo', "");
+// })->name('index.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
