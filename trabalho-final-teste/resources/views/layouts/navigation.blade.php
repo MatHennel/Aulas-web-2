@@ -27,7 +27,7 @@
                     
                 @if(Auth::user()->type_id == 2)
                     <x-nav-link :href="route('projetos.index')" :active="request()->routeIs('projetos.index')">
-                        {{ __('Projetos') }}
+                        {{ __('Achar um Desenvolvedor') }}
                     </x-nav-link>
 
                     @endif
@@ -53,7 +53,11 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Perfil') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('projetos.index')" :active="request()->routeIs('projetos.index')">
+                            {{ __('Meus Projetos') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -63,7 +67,7 @@
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Sair') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>

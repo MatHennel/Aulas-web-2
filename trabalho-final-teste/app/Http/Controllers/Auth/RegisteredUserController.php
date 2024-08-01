@@ -21,6 +21,7 @@ class RegisteredUserController extends Controller
      */
     public function create($type): View
     {
+    
         return view('auth.register',compact(['type']));
     }
 
@@ -35,6 +36,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'type' => ['required', 'exists:tipos_usuarios,id']
         ]);
 
         // $user = User::create([
