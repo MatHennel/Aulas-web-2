@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -21,12 +18,20 @@ return new class extends Migration
             $table->foreign('type_id')->references('id')->on('tipos_usuarios');
             $table->rememberToken();
             $table->timestamps();
+
+            // Campos adicionais Dev / Cliente
+            $table->string('cpfOuCep')->nullable();      // Cliente
+            $table->date('dataNascimento')->nullable();  // Desenvolvedor
+            $table->text('descricao')->nullable();       // Desenvolvedor
+            $table->string('empresa')->nullable();       // Cliente
+            $table->date('dataCriacao')->nullable();
+            $table->boolean('ativo')->default(true);
+            $table->string('endereco')->nullable();
+            $table->string('telefone')->nullable();
+            $table->float('avaliacao')->default(0);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');

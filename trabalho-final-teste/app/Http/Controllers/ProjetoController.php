@@ -3,34 +3,96 @@
 namespace App\Http\Controllers;
 
 use App\Models\Projeto;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-
 
 class ProjetoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Selecionar um dev para um projeto do cliente.
      */
-    public function index()
+    public function selecionarDev($projetoId, $devId)
     {
-       
+        $user = Auth::user();
 
-       
-        $userId = Auth::id();
-       
+        // O cliente só pode selecionar devs dos seus próprios projetos
+        $projeto = Projeto::where('cliente_id', $user->id)->findOrFail($projetoId);
+        $projeto->dev_selecionado_id = $devId;
+        $projeto->save();
 
-        $projetos = Projeto::where("user_id",$userId)->get();
-
-      
-
-        return view('projetos.index',compact(['projetos']));
+        return back()->with('success', 'Desenvolvedor selecionado com sucesso!');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostrar os devs inscritos nos projetos do cliente.
+     */
+    public function meusDevs()
+    {
+        $user = Auth::user();
+
+        // Somente o cliente pode ver seus devs
+        if ($user->type_id != 2) {
+            abort(403, "Acesso negado.");
+        }
+
+        // Carrega os projetos do cliente com seus devs inscritos
+        $projetos = Projeto::with(['devs', 'devSelecionado'])
+            ->where('cliente_id', $user->id)
+            ->get();
+
+        return view('projetos.meusDevs', compact('projetos'));
+    }
+
+    /**
+     * Listar projetos do cliente logado.
+     */
+    public function index()
+    {
+        $userId = Auth::id();
+
+        $projetos = Projeto::where("cliente_id", $userId)->get();
+
+        return view('projetos.index', compact('projetos'));
+    }
+
+    /**
+     * Exibir todos os projetos disponíveis para os desenvolvedores.
+     */
+    public function projetosDisponiveis()
+    {
+        $user = Auth::user();
+
+        if ($user->type_id != 1) {
+            abort(403, "Acesso negado.");
+        }
+
+        // Carrega os projetos com os devs inscritos
+        $projetos = Projeto::with('devs')->get();
+
+        return view('projetos.disponiveis', compact('projetos'));
+    }
+
+    /**
+     * Inscrever um dev em um projeto.
+     */
+    public function inscrever(Request $request, Projeto $projeto)
+    {
+        $user = Auth::user();
+
+        if ($user->type_id != 1) {
+            abort(403, "Acesso negado.");
+        }
+
+        // Evitar inscrição duplicada
+        if (!$projeto->devs->contains($user->id)) {
+            $projeto->devs()->attach($user->id);
+        }
+
+        return redirect()->route('projetos.disponiveis')->with('success', 'Inscrição realizada com sucesso!');
+    }
+
+    /**
+     * Formulário para o cliente criar novo projeto.
      */
     public function create()
     {
@@ -38,69 +100,53 @@ class ProjetoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazenar projeto criado pelo cliente.
      */
     public function store(Request $request)
     {
+        $user_id = Auth::id(); // cliente logado
 
-        $user_id = $request->user_id;
-
-        $projeto = new Projeto;
+        $projeto = new Projeto();
         $projeto->nome = $request->nome;
-        $projeto->descricao= $request->descricao;
+        $projeto->descricao = $request->descricao;
         $projeto->valor = $request->valor;
         $projeto->dataEntrega = $request->dataEntrega;
-        
-        $user = User::find($user_id);
-    
-        $projeto->user()->associate($user);
+        $projeto->cliente_id = $user_id;
         $projeto->save();
 
-        return redirect()->route('projetos.index');
-
-
+        return redirect()->route('projetos.index')->with('success', 'Projeto criado com sucesso!');
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Projeto $projeto)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Formulário de edição de projeto.
      */
     public function edit(Projeto $projeto)
     {
-        return view('projetos.edit',compact('projeto'));
+        return view('projetos.edit', compact('projeto'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualizar projeto do cliente.
      */
     public function update(Request $request, Projeto $projeto)
     {
-       
-        $projetoBanco = Projeto::find($projeto->id);
-        $projetoBanco->nome = $request->nome;
-        $projetoBanco->descricao= $request->descricao;
-        $projetoBanco->valor = $request->valor;
-        $projetoBanco->dataEntrega = $request->dataEntrega;
-        $projetoBanco->save();
+        $projeto->update([
+            'nome' => $request->nome,
+            'descricao' => $request->descricao,
+            'valor' => $request->valor,
+            'dataEntrega' => $request->dataEntrega,
+        ]);
 
-        return redirect()->route('projetos.index');
-
+        return redirect()->route('projetos.index')->with('success', 'Projeto atualizado com sucesso!');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Excluir projeto.
      */
     public function destroy(Projeto $projeto)
     {
-        Projeto::destroy($projeto->id);
+        $projeto->delete();
 
-        return redirect()->route('projetos.index');
+        return redirect()->route('projetos.index')->with('success', 'Projeto removido com sucesso!');
     }
 }

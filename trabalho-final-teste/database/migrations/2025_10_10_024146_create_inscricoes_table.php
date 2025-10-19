@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dev', function (Blueprint $table) {
+        Schema::create('inscricoes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('projeto_id')->constrained('projetos')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
-            $table->date('dataNascimento');
-            $table->string('descricao');
-            $table->unsignedBigInteger('user_id')->unique(); // 1:1 com users
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
+            $table->unique(['projeto_id', 'user_id']); // Evita inscrições duplicadas
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dev');
+        Schema::dropIfExists('inscricoes');
     }
 };

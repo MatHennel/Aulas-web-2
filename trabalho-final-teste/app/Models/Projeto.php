@@ -4,15 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Projeto extends Model
 {
     use HasFactory;
 
-    use SoftDeletes;
+    protected $fillable = [
+        'nome',
+        'descricao',
+        'valor',
+        'dataEntrega',
+        'user_id',
+    ];
 
-    public function user(){
-        return $this->belongsTo('\App\Models\User');
+    // Relação com os devs que estão participando do projeto
+    public function devs()
+    {
+        return $this->belongsToMany(User::class, 'projeto_dev', 'projeto_id', 'dev_id');
+    }
+
+    // Caso tenha um dev selecionado principal
+    public function devSelecionado()
+    {
+        return $this->belongsTo(User::class, 'dev_selecionado_id');
     }
 }
