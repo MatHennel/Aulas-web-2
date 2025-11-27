@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjetoController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ChatController;
 
 
 /*
@@ -65,6 +65,23 @@ Route::post('/projetos/{projeto}/selecionar-dev/{dev}', [ProjetoController::clas
 
 Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
 
+Route::get('/meus-projetos/dev', [ProjetoController::class, 'projetosEmDesenvolvimento'])
+    ->name('projetos.dev.emDesenvolvimento')
+    ->middleware(['auth', 'verified']);
 
+Route::post('/projetos/{id}/entregar', [ProjetoController::class, 'entregar'])
+    ->name('projetos.entregar');
+
+Route::get('/projetos/{projeto}/chat', [ChatController::class, 'index'])
+    ->name('chat.projeto');
+
+Route::post('/projetos/{projeto}/chat/enviar', [ChatController::class, 'enviar'])
+    ->name('chat.enviar');
+
+Route::get('/projetos/{projeto}/chat/mensagens', [ChatController::class, 'mensagens'])
+    ->name('chat.mensagens');
+
+Route::get('/projetos/em-desenvolvimento', [\App\Http\Controllers\ProjetoController::class, 'projetosEmDesenvolvimento'])
+     ->name('projetos.em.desenvolvimento');
 
 require __DIR__.'/auth.php';

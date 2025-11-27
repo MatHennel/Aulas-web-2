@@ -8,6 +8,40 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjetoController extends Controller
 {
+
+    public function entregar($id)
+    {
+        $projeto = Projeto::findOrFail($id);
+
+        // Verificar se o usuário logado é o dev selecionado
+        if ($projeto->dev_selecionado_id !== Auth::id()) {
+            abort(403, "Você não tem permissão para entregar este projeto.");
+        }
+
+        // Se já estiver finalizado, não deixa finalizar de novo
+        if (!is_null($projeto->dataFinalizacao)) {
+            return back()->with('info', 'Este projeto já foi finalizado.');
+        }
+
+        // Atualizar status e data
+        $projeto->status_id = 2; // ID do status "Finalizado" (ajuste conforme sua tabela)
+        $projeto->dataFinalizacao = now();
+        $projeto->save();
+
+        return back()->with('success', 'Projeto entregue com sucesso!');
+    }
+
+
+    public function projetosEmDesenvolvimento()
+    {
+        $devId = auth()->id();
+
+        $projetos = Projeto::where('dev_selecionado_id', $devId)->get();
+
+        return view('projetos.projetosEmDesenvolvimento', compact('projetos'));
+    }
+
+
     /**
      * Selecionar um dev para um projeto do cliente.
      */
@@ -18,6 +52,7 @@ class ProjetoController extends Controller
         // O cliente só pode selecionar devs dos seus próprios projetos
         $projeto = Projeto::where('cliente_id', $user->id)->findOrFail($projetoId);
         $projeto->dev_selecionado_id = $devId;
+        $projeto->status_id = 1; // 1 = Desenvolvimento (ajuste se usar outra tabela)
         $projeto->save();
 
         return back()->with('success', 'Desenvolvedor selecionado com sucesso!');
@@ -31,7 +66,7 @@ class ProjetoController extends Controller
         $user = Auth::user();
 
         // Somente o cliente pode ver seus devs
-        if ($user->type_id != 2) {
+        if ($user->tipo_usuario != 2) {
             abort(403, "Acesso negado.");
         }
 
@@ -62,7 +97,7 @@ class ProjetoController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->type_id != 1) {
+        if ($user->tipo_usuario != 1) {
             abort(403, "Acesso negado.");
         }
 
@@ -79,7 +114,7 @@ class ProjetoController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->type_id != 1) {
+        if ($user->tipo_usuario != 1) {
             abort(403, "Acesso negado.");
         }
 

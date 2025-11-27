@@ -34,27 +34,30 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'type' => ['required', 'exists:tipos_usuarios,id']
-        ]);
+        'name'  => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:usuario,email'],
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        'type'  => ['required', 'exists:tipos_usuarios,id']
+    ]);
 
-        // Criação do usuário
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->type_id = $request->input('type'); // tipo do usuário
-        $user->dataCriacao = Carbon::now(); // data atual
-        $user->ativo = true; // usuário ativo por padrão
-        $user->avaliacao = 0; // nota inicial
-        $user->save();
+    $user = new User();
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
+    $user->tipo_usuario = $request->input('type');
+    $user->dataCriacao = now();
+    $user->ativo = true;
+    $user->avaliacao = 0;
 
-        // Dispara o evento de registro e autentica o usuário
-        event(new Registered($user));
-        Auth::login($user);
+$user->save();
 
-        return redirect(RouteServiceProvider::HOME);
-    }
+    // Evento padrão de registro
+    event(new Registered($user));
+
+    // Login automático
+    Auth::login($user);
+
+    return redirect(RouteServiceProvider::HOME);
+}
+
 }

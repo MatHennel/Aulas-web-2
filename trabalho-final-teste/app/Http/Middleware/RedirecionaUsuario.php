@@ -19,9 +19,9 @@ class RedirecionaUsuario
     {
         $user = Auth::user();
 
-        if ($user->type_id === 1) {
+        if ($user->tipo_usuario === 1) {
             return redirect()->route('desenvolvedores.index');
-        } elseif ($user->type_id === 2) {
+        } elseif ($user->tipo_usuario === 2) {
             return redirect()->route('clientes.index');
         }
 

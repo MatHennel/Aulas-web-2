@@ -11,15 +11,17 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'usuario';
+
     protected $fillable = [
         'name',
         'email',
         'password',
-        'type_id',       // 1 = Cliente, 2 = Desenvolvedor
-        'cpfOuCep',      // Cliente
-        'dataNascimento',// Desenvolvedor
-        'descricao',     // Desenvolvedor
-        'empresa',       // Cliente
+        'tipo_usuario',      // FK para tipos_usuarios
+        'cpfOuCep',
+        'dataNascimento',
+        'descricao',
+        'empresa',
         'dataCriacao',
         'ativo',
         'endereco',
@@ -28,32 +30,59 @@ class User extends Authenticatable
     ];
 
     protected $hidden = [
-        'password',
+        'senha',
         'remember_token',
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'dataNascimento' => 'date',
-        'dataCriacao' => 'date',
-        'ativo' => 'boolean',
-        'avaliacao' => 'float',
+        'dataNascimento'    => 'date',
+        'dataCriacao'       => 'date',
+        'ativo'             => 'boolean',
+        'avaliacao'         => 'float',
     ];
 
-    public function projeto()
-    {
-        return $this->hasMany('\App\Models\Projeto');
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | RELACIONAMENTOS
+    |--------------------------------------------------------------------------
+    */
 
+    // Tipo de usuário (1 = Dev, 2 = Cliente)
     public function tipoUsuario()
     {
-        return $this->belongsTo('\App\Models\TipoUsuario', 'type_id');
+        return $this->belongsTo(TipoUsuario::class, 'tipo_usuario');
     }
 
-    // User.php (apenas para devs)
-public function projetosInscritos() {
-    return $this->belongsToMany(Projeto::class, 'inscricoes', 'user_id', 'projeto_id');
-}
+    // Projetos que o usuário (cliente) criou
+    public function projetosCriados()
+    {
+        return $this->hasMany(Projeto::class, 'cliente_id');
+    }
 
+    // Projetos em que ele é dev selecionado
+    public function projetosDevSelecionado()
+    {
+        return $this->hasMany(Projeto::class, 'dev_selecionado_id');
+    }
+
+    // Projetos em que ele é dev orientador
+    public function projetosDevOrientador()
+    {
+        return $this->hasMany(Projeto::class, 'dev_orientador_selecionado_id');
+    }
+
+    // Projetos em que ele se inscreveu (via tabela "inscricoes")
+    public function projetosInscritos()
+    {
+        return $this->belongsToMany(Projeto::class, 'inscricoes', 'user_id', 'projeto_id')
+                    ->withTimestamps();
+    }
+
+    // Devs participantes no relacionamento projeto_dev
+    public function projetosParticipando()
+    {
+        return $this->belongsToMany(Projeto::class, 'projeto_dev', 'dev_id', 'projeto_id')
+                    ->withTimestamps();
+    }
 }

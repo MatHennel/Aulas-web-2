@@ -16,7 +16,7 @@ return new class extends Migration
 
             // Relacionamentos
             $table->foreign('projeto_id')->references('id')->on('projetos')->onDelete('cascade');
-            $table->foreign('dev_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('dev_id')->references('id')->on('usuario')->onDelete('cascade');
 
             // Evita duplicação do mesmo dev em um projeto
             $table->unique(['projeto_id', 'dev_id']);

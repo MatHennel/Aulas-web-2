@@ -29,7 +29,7 @@
                                 class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md shadow-sm">
                         </div>
 
-                        @if(auth()->user()->type_id == 1)
+                        @if(auth()->user()->tipo_usuario == 1)
                             <!-- Desenvolvedor -->
 
                             <!-- CPF -->
@@ -55,7 +55,7 @@
                                     class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md shadow-sm">{{ old('descricao', auth()->user()->descricao) }}</textarea>
                             </div>
 
-                        @elseif(auth()->user()->type_id == 2)
+                        @elseif(auth()->user()->tipo_usuario == 2)
                             <!-- Cliente -->
 
                             <!-- CPF ou CNPJ -->

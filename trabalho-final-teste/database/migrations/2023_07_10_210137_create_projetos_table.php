@@ -17,14 +17,24 @@ return new class extends Migration
             $table->text('descricao');
             $table->double('valor', 10, 2);
             $table->date('dataEntrega');
+            $table->date('dataFinalizacao')->nullable();
+            $table->unsignedBigInteger('status_id')->nullable();
+            $table->foreign('status_id')->references('id')->on('status');
 
             // Cliente que criou o projeto
             $table->unsignedBigInteger('cliente_id');
-            $table->foreign('cliente_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('cliente_id')->references('id')->on('usuario')->onDelete('cascade');
 
             // Dev selecionado (opcional)
             $table->unsignedBigInteger('dev_selecionado_id')->nullable();
-            $table->foreign('dev_selecionado_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('dev_selecionado_id')->references('id')->on('usuario')->onDelete('set null');
+
+            // Dev orientador selecionado(opcional)
+            $table->unsignedBigInteger('dev_orientador_selecionado_id')->nullable();
+            $table->foreign('dev_orientador_selecionado_id')->references('id')->on('usuario')->onDelete('set null');
+
+
+
 
             $table->softDeletes();
             $table->timestamps();

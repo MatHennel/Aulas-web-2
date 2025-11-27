@@ -43,7 +43,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         // Campos comuns
-        $user->name = $request->input('name');
+        $user->name = $request->input('nome');
         $user->email = $request->input('email');
         $user->telefone = $request->input('telefone');
         $user->endereco = $request->input('endereco');
