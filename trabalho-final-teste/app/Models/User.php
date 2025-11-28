@@ -85,4 +85,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Projeto::class, 'projeto_dev', 'dev_id', 'projeto_id')
                     ->withTimestamps();
     }
+
+    public function avaliacoesRecebidas()
+    {
+        return $this->hasMany(Avaliacao::class, 'dev_id');
+    }
 }

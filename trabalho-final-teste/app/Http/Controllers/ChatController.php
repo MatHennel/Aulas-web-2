@@ -11,7 +11,9 @@ class ChatController extends Controller
 {
     public function index(Projeto $projeto)
     {
-        return view('chat.index', compact('projeto'));
+        $somenteLeitura = $projeto->status_id == 2 && !is_null($projeto->dataFinalizacao);
+
+        return view('chat.index', compact('projeto', 'somenteLeitura'));
     }
 
     public function enviar(Request $request, Projeto $projeto)

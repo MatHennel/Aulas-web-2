@@ -8,18 +8,24 @@
     <div class="py-6">
         <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded shadow p-6">
 
-        @if(auth()->user()->tipo_usuario == 1)
             {{-- BOTÃO VOLTAR --}}
-            <a href="{{ route('projetos.em.desenvolvimento') }}"
-               class="inline-block mb-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
-                ← Voltar para Projetos em Desenvolvimento
-            </a>
-        @else
-            <a href="{{ route('projetos.index') }}"
-            class="inline-block mb-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
-                ← Voltar para Projetos
-            </a>
-        @endif
+            @if(auth()->user()->tipo_usuario == 1)
+                @php
+                    $rotaDev = $somenteLeitura
+                        ? route('projetos.dev.entregues')
+                        : route('projetos.em.desenvolvimento');
+                @endphp
+
+                <a href="{{ $rotaDev }}"
+                   class="inline-block mb-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
+                    ← Voltar
+                </a>
+            @else
+                <a href="{{ route('projetos.index') }}"
+                   class="inline-block mb-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
+                    ← Voltar
+                </a>
+            @endif
 
             {{-- ÁREA DAS MENSAGENS --}}
             <div id="mensagens"
@@ -27,19 +33,27 @@
                         bg-gray-100 dark:bg-gray-900">
             </div>
 
-            {{-- FORM DE ENVIO --}}
-            <form id="formEnvio">
+            {{-- FORM DE ENVIO (se não for somente leitura) --}}
+            @if(!$somenteLeitura)
+            <form id="formMensagem" class="mt-4">
                 @csrf
-                <div class="flex space-x-2">
-                    <input type="text" name="mensagem" id="mensagem"
-                           class="flex-1 border rounded p-2 dark:bg-gray-700 dark:text-white"
-                           placeholder="Digite sua mensagem...">
+                <div class="flex gap-2">
+                    <input type="text" id="mensagem"
+                        class="flex-1 p-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white"
+                        placeholder="Digite sua mensagem...">
 
-                    <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                         Enviar
                     </button>
                 </div>
             </form>
+            @else
+                <div class="mt-4 p-3 bg-yellow-200 text-yellow-800 rounded">
+                    Este chat está em modo somente leitura.  
+                    O projeto foi finalizado.
+                </div>
+            @endif
 
         </div>
     </div>
@@ -48,6 +62,7 @@
         const mensagensDiv = document.getElementById('mensagens');
         const authId = {{ auth()->id() }};
 
+        // CARREGA AS MENSAGENS
         function carregarMensagens() {
             fetch("{{ route('chat.mensagens', $projeto->id) }}")
                 .then(res => res.json())
@@ -55,14 +70,11 @@
                     mensagensDiv.innerHTML = "";
 
                     data.forEach(msg => {
-
                         const el = document.createElement('div');
                         el.classList.add("mb-3", "flex");
 
-                        // Verifica se a mensagem é do usuário logado (DEV)
                         const isMine = msg.user_id === authId;
 
-                        // Estilos dos balões
                         const bubbleClasses = isMine
                             ? "bg-indigo-600 text-white ml-auto"
                             : "bg-gray-700 text-white mr-auto";
@@ -71,12 +83,8 @@
 
                         el.innerHTML = `
                             <div class="max-w-xs px-4 py-2 rounded-xl shadow ${bubbleClasses}">
-                                <div class="font-semibold text-sm">
-                                    ${msg.user.name}
-                                </div>
-                                <div class="text-sm">
-                                    ${msg.mensagem}
-                                </div>
+                                <div class="font-semibold text-sm">${msg.user.name}</div>
+                                <div class="text-sm">${msg.mensagem}</div>
                                 <div class="text-[10px] text-gray-200 mt-1 text-right">
                                     ${new Date(msg.created_at).toLocaleString('pt-BR')}
                                 </div>
@@ -84,7 +92,6 @@
                         `;
 
                         el.classList.add(alignment);
-
                         mensagensDiv.appendChild(el);
                     });
 
@@ -92,12 +99,12 @@
                 });
         }
 
-        // Atualiza mensagens automaticamente
-        setInterval(carregarMensagens, 1500);
         carregarMensagens();
+        setInterval(carregarMensagens, 1500);
 
-        // Enviar mensagem via AJAX
-        document.getElementById('formEnvio').addEventListener('submit', function(e) {
+        // ENVIO DE MENSAGEM
+        @if(!$somenteLeitura)
+        document.getElementById('formMensagem').addEventListener('submit', function(e) {
             e.preventDefault();
 
             fetch("{{ route('chat.enviar', $projeto->id) }}", {
@@ -109,11 +116,14 @@
                 body: JSON.stringify({
                     mensagem: document.getElementById('mensagem').value
                 })
-            }).then(() => {
+            })
+            .then(res => res.json())
+            .then(() => {
                 document.getElementById('mensagem').value = '';
                 carregarMensagens();
             });
         });
+        @endif
     </script>
 
 </x-app-layout>

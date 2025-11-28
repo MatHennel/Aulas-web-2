@@ -8,6 +8,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjetoController extends Controller
 {
+    public function projetosEntregues()
+    {
+        $devId = auth()->id();
+
+        $projetos = Projeto::where('dev_selecionado_id', $devId)
+                            ->whereNotNull('dataFinalizacao')
+                            ->where('status_id',2)
+                            ->get();
+
+        return view('projetos.projetosEntregues', compact('projetos'));
+    }
 
     public function entregar($id)
     {
@@ -36,7 +47,9 @@ class ProjetoController extends Controller
     {
         $devId = auth()->id();
 
-        $projetos = Projeto::where('dev_selecionado_id', $devId)->get();
+        $projetos = Projeto::where('dev_selecionado_id', $devId)
+                        ->where('status_id', 1)
+                        ->get();
 
         return view('projetos.projetosEmDesenvolvimento', compact('projetos'));
     }
@@ -73,6 +86,7 @@ class ProjetoController extends Controller
         // Carrega os projetos do cliente com seus devs inscritos
         $projetos = Projeto::with(['devs', 'devSelecionado'])
             ->where('cliente_id', $user->id)
+            ->whereNull('status_id')
             ->get();
 
         return view('projetos.meusDevs', compact('projetos'));
@@ -84,11 +98,34 @@ class ProjetoController extends Controller
     public function index()
     {
         $userId = Auth::id();
+        $filtro = request('filtro');
 
-        $projetos = Projeto::where("cliente_id", $userId)->get();
+        $query = Projeto::where("cliente_id", $userId);
+
+        switch ($filtro) {
+            case 'sem':
+                $query->whereNull('status_id');
+                break;
+
+            case 'dev':
+                $query->where('status_id', 1);
+                break;
+
+            case 'concluido':
+                $query->where('status_id', 2);
+                break;
+
+            // todos -> não aplica filtro
+            default:
+                // mostra tudo
+                break;
+        }
+
+        $projetos = $query->get();
 
         return view('projetos.index', compact('projetos'));
     }
+
 
     /**
      * Exibir todos os projetos disponíveis para os desenvolvedores.
@@ -101,11 +138,21 @@ class ProjetoController extends Controller
             abort(403, "Acesso negado.");
         }
 
-        // Carrega os projetos com os devs inscritos
-        $projetos = Projeto::with('devs')->get();
+        $userId = Auth::id();
+
+        $projetos = Projeto::with('devs')
+            ->where(function($query) use ($userId) {
+                $query->whereNull('status_id') // Projetos disponíveis
+                    ->orWhere(function($q) use ($userId) {
+                        $q->where('status_id', 1)
+                            ->where('dev_selecionado_id', '!=', $userId); // Exclui se dev já for o selecionado
+                    });
+            })
+            ->get();
 
         return view('projetos.disponiveis', compact('projetos'));
     }
+
 
     /**
      * Inscrever um dev em um projeto.

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\User;
+use App\Models\Projeto;
 use Carbon\Carbon;
 
 class ProfileController extends Controller
@@ -18,10 +19,25 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+
+        $dev = User::findOrFail($user->id);
+
+        // Buscar projetos ainda sem desenvolvedor selecionado
+        $projetos = Projeto::whereNull('dev_selecionado_id')
+                            ->where('cliente_id', $user->id)
+                            ->get();
+
+        $avaliacoes = $dev->avaliacoesRecebidas()->with('cliente')->latest()->get();
+
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'projetos' => $projetos,
+            'avaliacoes' => $avaliacoes,
         ]);
     }
+
 
      public function show($id)
     {
@@ -32,7 +48,9 @@ class ProfileController extends Controller
             ? Carbon::parse($dev->dataNascimento)->age
             : null;
 
-        return view('profile.show', compact('dev', 'idade'));
+        $avaliacoes = $dev->avaliacoesRecebidas()->with('cliente')->latest()->get();
+
+        return view('profile.show', compact('dev', 'idade','avaliacoes'));
     }
 
     /**
@@ -43,7 +61,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         // Campos comuns
-        $user->name = $request->input('nome');
+        $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->telefone = $request->input('telefone');
         $user->endereco = $request->input('endereco');

@@ -67,4 +67,10 @@ class Projeto extends Model
         return $this->hasMany(Chat::class, 'projeto_id');
     }
 
+    public function avaliacao()
+    {
+        return $this->hasOne(Avaliacao::class);
+    }
+
+
 }

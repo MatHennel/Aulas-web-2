@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjetoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\AvaliacaoController;
 
 
 /*
@@ -81,7 +82,14 @@ Route::post('/projetos/{projeto}/chat/enviar', [ChatController::class, 'enviar']
 Route::get('/projetos/{projeto}/chat/mensagens', [ChatController::class, 'mensagens'])
     ->name('chat.mensagens');
 
-Route::get('/projetos/em-desenvolvimento', [\App\Http\Controllers\ProjetoController::class, 'projetosEmDesenvolvimento'])
+Route::get('/projetos/em-desenvolvimento', [ProjetoController::class, 'projetosEmDesenvolvimento'])
      ->name('projetos.em.desenvolvimento');
+
+Route::get('/projetos/entregues', [ProjetoController::class, 'projetosEntregues'])
+     ->name('projetos.dev.entregues');
+
+Route::post('/projetos/{projeto}/avaliar', [AvaliacaoController::class, 'store'])
+     ->name('projetos.avaliar');
+
 
 require __DIR__.'/auth.php';
