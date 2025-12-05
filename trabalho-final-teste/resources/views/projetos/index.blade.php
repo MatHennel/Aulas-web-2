@@ -211,7 +211,8 @@
                                             <input type="number" name="nota" step="0.1" min="0" max="10"
                                                 class="w-full mt-1 px-3 py-2 border rounded"
                                                 value="{{ $ja ? $avaliacao->nota : '' }}"
-                                                {{ $ja ? 'readonly' : '' }} required>
+                                                {{ $ja ? 'readonly' : '' }} required
+                                                oninput="if(this.value > 10) this.value = 10; if(this.value < 0) this.value = 0;">
                                         </div>
 
                                         {{-- DESCRIÇÃO --}}

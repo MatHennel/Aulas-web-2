@@ -22,19 +22,33 @@
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <div class="grid gap-4">
                             <div class="col-span-2 sm:col-span-1">
+                                
+                                @php
+                                    $userId = Auth::id();
+                                    $jaInscrito = $projeto->devs->contains($userId);
+                                    $jaOrientador = $projeto->orientadores->contains($userId);
+                                @endphp
+
                                 <div class="p-4 flex justify-between items-center w-full">
+                                    
                                     <h2 class="text-2xl font-semibold">
                                         {{ $projeto->nome }}
                                     </h2>
-                                    @php
-                                        $userId = Auth::id();
-                                        $jaInscrito = $projeto->devs->contains($userId);
-                                    @endphp
 
-                                    {{-- Lógica para os botões --}}
+                                    {{-- Lógica dos botões --}}
+                                    {{-- ======================= --}}
+                                    
+                                    {{-- PROJETOS ABERTOS (status null) --}}
                                     @if($projeto->status_id != 1)
-                                        {{-- Botão Inscrever-se --}}
-                                        @if(!$jaInscrito)
+
+                                        {{-- Se já é orientador, bloqueia inscrição --}}
+                                        @if($jaOrientador)
+                                            <span class="px-4 py-2 bg-green-500 text-white rounded">
+                                                Já inscrito como orientador
+                                            </span>
+
+                                        {{-- Inscrever como DEV --}}
+                                        @elseif(!$jaInscrito)
                                             <form method="POST" action="{{ route('projetos.inscrever', $projeto) }}">
                                                 @csrf
                                                 <input type="hidden" name="tipo_inscricao" value="dev">
@@ -43,16 +57,30 @@
                                                 </button>
                                             </form>
                                         @else
-                                            <span class="px-4 py-2 bg-gray-400 text-white rounded">Já inscrito</span>
+                                            <span class="px-4 py-2 bg-gray-400 text-white rounded">
+                                                Já inscrito
+                                            </span>
                                         @endif
 
+                                    {{-- PROJETOS EM DESENVOLVIMENTO (status = 1) --}}
                                     @elseif($projeto->status_id == 1 && $projeto->dev_selecionado_id != $userId)
-                                        {{-- Botão Orientar --}}
-                                        <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-                                            Orientar
-                                        </button>
-                                    @endif
 
+                                        {{-- Se já está como orientador, não deixa orientar de novo --}}
+                                        @if($jaOrientador)
+                                            <span class="px-4 py-2 bg-green-500 text-white rounded">
+                                                Já inscrito como orientador
+                                            </span>
+
+                                        @else
+                                            <form method="POST" action="{{ route('projetos.orientar', $projeto) }}">
+                                                @csrf
+                                                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                                                    Orientar
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                    @endif
 
                                 </div>
 
@@ -62,8 +90,11 @@
 
                                 <div class="p-4 flex justify-between w-full">
                                     <div>Valor: R$ {{ number_format($projeto->valor, 2, ',', '.') }}</div>
-                                    <div>Data Prevista: {{ \Carbon\Carbon::parse($projeto->dataEntrega)->locale('pt')->isoFormat('DD [de] MMMM [de] YYYY') }}</div>
+                                    <div>Data Prevista: 
+                                        {{ \Carbon\Carbon::parse($projeto->dataEntrega)->locale('pt')->isoFormat('DD [de] MMMM [de] YYYY') }}
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

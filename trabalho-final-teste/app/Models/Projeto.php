@@ -72,5 +72,10 @@ class Projeto extends Model
         return $this->hasOne(Avaliacao::class);
     }
 
+    public function orientadores()
+    {
+        return $this->belongsToMany(User::class, 'projeto_orientador', 'projeto_id', 'user_id');
+    }
+
 
 }

@@ -8,6 +8,35 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjetoController extends Controller
 {
+    public function selecionarOrientador($projetoId, $orientadorId)
+    {
+        $projeto = Projeto::findOrFail($projetoId);
+
+        $projeto->dev_orientador_selecionado_id = $orientadorId;
+        $projeto->save();
+
+        return back()->with('success', 'Orientador selecionado com sucesso!');
+    }
+
+    public function orientar(Projeto $projeto)
+    {
+        $userId = Auth::id();
+
+        // Evitar que dev selecionado possa orientar
+        if ($projeto->dev_selecionado_id == $userId) {
+            return back()->with('error', 'Você já está desenvolvendo este projeto.');
+        }
+
+        // Evitar dupla inscrição como orientador
+        if ($projeto->orientadores->contains($userId)) {
+            return back()->with('error', 'Você já está inscrito como orientador.');
+        }
+
+        $projeto->orientadores()->attach($userId);
+
+        return back()->with('success', 'Você se inscreveu como orientador!');
+    }
+
     public function projetosEntregues()
     {
         $devId = auth()->id();
@@ -47,11 +76,18 @@ class ProjetoController extends Controller
     {
         $devId = auth()->id();
 
-        $projetos = Projeto::where('dev_selecionado_id', $devId)
-                        ->where('status_id', 1)
-                        ->get();
+        $projetosDev = Projeto::where('status_id', 1)
+            ->where('dev_selecionado_id', $devId)
+            ->with(['cliente', 'orientadores'])
+            ->get();
 
-        return view('projetos.projetosEmDesenvolvimento', compact('projetos'));
+        $projetosOrientador = Projeto::where('status_id', 1)
+            ->where('dev_orientador_selecionado_id', $devId)
+            ->with(['cliente', 'orientadores'])
+            ->get();
+
+        return view('projetos.projetosEmDesenvolvimento', compact('projetosDev','projetosOrientador'));
+
     }
 
 
@@ -141,14 +177,17 @@ class ProjetoController extends Controller
         $userId = Auth::id();
 
         $projetos = Projeto::with('devs')
-            ->where(function($query) use ($userId) {
-                $query->whereNull('status_id') // Projetos disponíveis
-                    ->orWhere(function($q) use ($userId) {
-                        $q->where('status_id', 1)
-                            ->where('dev_selecionado_id', '!=', $userId); // Exclui se dev já for o selecionado
+            ->whereNull('status_id') // Projetos sem status, disponíveis
+            ->orWhere(function($query) use ($userId) {
+                $query->where('status_id', 1) // Projetos em desenvolvimento
+                    ->where('dev_selecionado_id', '!=', $userId)
+                    ->where(function($q) use ($userId) {
+                        $q->whereNull('dev_orientador_selecionado_id')
+                            ->orWhere('dev_orientador_selecionado_id', '!=', $userId);
                     });
             })
             ->get();
+
 
         return view('projetos.disponiveis', compact('projetos'));
     }

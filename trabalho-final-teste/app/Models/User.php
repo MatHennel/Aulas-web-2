@@ -90,4 +90,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Avaliacao::class, 'dev_id');
     }
+
+    public function projetosComoOrientador()
+    {
+        return $this->belongsToMany(Projeto::class, 'projeto_orientador', 'user_id', 'projeto_id');
+    }
 }

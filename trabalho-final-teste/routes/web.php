@@ -91,5 +91,12 @@ Route::get('/projetos/entregues', [ProjetoController::class, 'projetosEntregues'
 Route::post('/projetos/{projeto}/avaliar', [AvaliacaoController::class, 'store'])
      ->name('projetos.avaliar');
 
+Route::post('/projetos/{projeto}/orientar', [ProjetoController::class, 'orientar'])
+    ->name('projetos.orientar');
+
+Route::post('/projetos/{projeto}/selecionar-orientador/{orientador}', 
+    [ProjetoController::class, 'selecionarOrientador']
+)->name('projetos.selecionarOrientador');
+
 
 require __DIR__.'/auth.php';
